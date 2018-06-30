@@ -8,7 +8,8 @@ public class CharBase : MonoBehaviour {
     protected GameObject[] shotObjList;
 
     [SerializeField]
-    protected float moveSpeed;
+	protected float moveSpeed;
+
 	// Use this for initialization
 	void Start () {
 		
