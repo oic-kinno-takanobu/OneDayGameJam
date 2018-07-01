@@ -16,9 +16,8 @@ public class CharBase : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
 
+    }
     /// <summary>
     /// 弾を取得する処理
     /// </summary>
