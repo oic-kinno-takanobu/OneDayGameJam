@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BarrettBase : MonoBehaviour {
+public class BulletBase : MonoBehaviour {
 
     [SerializeField]
     protected float barrettSpeed;
@@ -17,7 +17,7 @@ public class BarrettBase : MonoBehaviour {
 		
 	}
 
-    protected void OnCollisionEnter(Collision collision) {
+    protected void OnTriggerEnter (Collider collider){
         
     }
 }
