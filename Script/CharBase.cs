@@ -6,9 +6,15 @@ public class CharBase : MonoBehaviour {
 
     [SerializeField]
     protected GameObject[] shotObjList;
-
+    [SerializeField]
+    protected float maxShotInterval = 0.15f;
     [SerializeField]
     protected float moveSpeed;
+
+    protected float shotInterval = 0f;
+
+
+
 	// Use this for initialization
 	void Start () {
 		
@@ -18,6 +24,7 @@ public class CharBase : MonoBehaviour {
 	void Update () {
 
     }
+
     /// <summary>
     /// 弾を取得する処理
     /// </summary>

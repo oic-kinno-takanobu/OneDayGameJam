@@ -1,28 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BulletCommon;
 
 public class Player : CharBase {
 
     GameObject shotObj;
-    [SerializeField]
-    GameObject[] bitObjList;
 
-    float maxShotInterval = 0.15f;
-    float shotInterval = 0f;
+    [SerializeField]
+    private GameObject bitObj;
+
+    int bitBulletTyep = BulletType.BULLET_TYPE_NOMAL;
 
     float bitMoveTime = 0;
     float bitMoveSpeed = 0.5f;
     float bitAngle;
 
-    const int MAX_BIT_NUM = 3;
+    const int MAX_BIT_NUM = 6;
     const float BIT_RANGE = 2.0f;
     const float BIT_MAX_MOVE_TIME = 1.0f;
     const float BASE_ANGLE = 360;
 
-	// Use this for initialization
-	void Start () {
+    GameObject[] bitObjList = new GameObject[MAX_BIT_NUM];
+
+    // Use this for initialization
+    void Start () {
         shotObj = GetShotObj(0);
+
+        for (int i = 0; i < MAX_BIT_NUM; i++) {
+            BitAdd();
+        }
     }
 	
 	// Update is called once per frame
@@ -57,17 +64,20 @@ public class Player : CharBase {
             return;
         }
 
+        // 小型機の弾発射
+        for (int i = 0; i < bitObjList.Length; i++) {
+            if(bitObjList[i] != null) {
+                bitObjList[i].GetComponent<Bit>().BitShot(bitBulletTyep);
+            } 
+        }
+
         shotInterval += Time.deltaTime;
         if(shotInterval < maxShotInterval) {
             return;
         }
         // 自機の弾発射
         Instantiate(shotObj, transform.position, transform.rotation);
-        // 小型機の弾発射
-        for (int i = 0; i < bitObjList.Length; i++) {
-            //未実装
-        }
-
+       
         shotInterval = 0;
     }
 
@@ -82,16 +92,57 @@ public class Player : CharBase {
             if (bitObjList[i] == null) {
                 continue;
             }
-            float radianAngele = (bitAngle * i + BASE_ANGLE * bitMoveTime) * Mathf.Deg2Rad;
-            float angleX = Mathf.Sin(radianAngele) * BIT_RANGE;
-            float angleY = Mathf.Cos(radianAngele) * BIT_RANGE;
+            float totalAngle = bitAngle * i + BASE_ANGLE * bitMoveTime;
+            Vector3 vector = getVectorByAlgle(totalAngle, BIT_RANGE);
+            Bit bitScript = bitObjList[i].GetComponent<Bit>();
 
-            bitObjList[i].transform.localPosition = transform.position + new Vector3(angleX, 0, angleY);
+            if (bitScript.getIsApproaches()) {
+                //自機に近づく処理
+                Vector3 distans = (transform.position + vector) - bitObjList[i].transform.localPosition;
+                bitObjList[i].transform.localPosition += distans / 20.0f;
+                if(Mathf.Sqrt(distans.x * distans.x + distans.z * distans.z) <= BIT_RANGE) {
+                    bitScript.setIsApproaches(false);
+                }
+
+            } else {
+                bitObjList[i].transform.localPosition = transform.position + vector;
+            }
+           
         }
 
         bitMoveTime += Time.deltaTime * bitMoveSpeed;
         if (bitMoveTime > BIT_MAX_MOVE_TIME) {
             bitMoveTime -= BIT_MAX_MOVE_TIME;
         }
+    }
+
+    /// <summary>
+    /// 小型機を追加する処理
+    /// </summary>
+    private void BitAdd() {
+        float randomAngle = Random.Range(0, 360);
+        Vector3 vector = getVectorByAlgle(randomAngle, BIT_RANGE * 10);
+
+        for (int i = 0; i < MAX_BIT_NUM; i++) {
+            if(bitObjList[i] == null) {
+                bitObjList[i] = Instantiate(bitObj, vector, new Quaternion(0, 0, 0, 0)) as GameObject;
+                break;
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// 角度から2次元座標取得処理
+    /// </summary>
+    /// <param name="angle"></param>
+    /// <param name="lenge"></param>
+    /// <returns></returns>
+    private Vector3 getVectorByAlgle (float angle, float lenge) {
+        float radianAngele = (angle) * Mathf.Deg2Rad;
+        float angleX = Mathf.Sin(radianAngele) * lenge;
+        float angleY = Mathf.Cos(radianAngele) * lenge;
+
+        return new Vector3(angleX, 0, angleY);
     }
 }

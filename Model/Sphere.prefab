@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1790d66c15eb3d4380da00af4c29f44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  burretSpeed: 5
+  burretSpeed: 15
   destoryBulletTime: 1
 --- !u!135 &135887475958481716
 SphereCollider:
