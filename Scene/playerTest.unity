@@ -293,10 +293,7 @@ MonoBehaviour:
   - {fileID: 1330357115428354, guid: 16f017bf89b77a44db207509a7ef0dc9, type: 2}
   maxShotInterval: 0.15
   moveSpeed: 5
-  bitObjList:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  bitObj: {fileID: 1117105982452464, guid: 20d146ae4be60c94eb317f410b7c2fc0, type: 2}
 --- !u!65 &1171840998
 BoxCollider:
   m_ObjectHideFlags: 0
